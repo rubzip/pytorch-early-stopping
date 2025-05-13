@@ -1,8 +1,12 @@
 import torch
 import torch.nn as nn
 import torch.optim as optim
-from torchvision import datasets, transforms
 from torch.utils.data import DataLoader
+from torchvision import datasets, transforms
+
+import sys
+sys.path.append('./pytorch_early_stopping')
+from early_stopping import EarlyStopping
 
 class MNISTModel(nn.Module):
     def __init__(self):
@@ -75,7 +79,11 @@ def train(
         val_acc = correct / total
 
         print(f"Epoch {epoch+1} | Train Loss = {train_loss:.4f}, Train Acc = {train_acc:.4f} | Val Loss = {val_loss:.4f}, Val Acc = {val_acc:.4f}")
-        score = val_loss if early_stop_on == "loss" else val_acc
+        
+        if early_stop_on == "loss":
+            score = val_loss
+        if early_stop_on == "acc":
+            score = val_acc
         early_stopper(score, model)
 
         if early_stopper.early_stop:
