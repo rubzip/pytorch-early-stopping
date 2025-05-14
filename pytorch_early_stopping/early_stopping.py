@@ -31,7 +31,7 @@ class EarlyStopping:
             start_from_epoch (int, optional): Number of initial epochs to skip before starting early stopping checks. Defaults to 0.
             initial_epoch (int, optional): Value to initialize epoch count. Defaults to 0.
             higher_is_better (bool, optional): If True, a higher value is considered an improvement (e.g., accuracy).
-                                 If False, a lower value is considered better (e.g., loss). Default is True. Defaults to False.
+                                 If False, a lower value is considered better (e.g., loss). Defaults to False.
             log_func (Callable[[str], None], optional): Logging function to use (e.g., `print`, `logger.info`). Defaults to print.
         """
         self.patience = patience
