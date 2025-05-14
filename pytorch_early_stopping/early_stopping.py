@@ -82,6 +82,7 @@ class EarlyStopping:
 
         if self.best_value is None:
             self.best_value = value
+            self.epochs_without_improvement = 0
             self._save_best_model(model)
             self._log(
                 f"Epoch {self.epoch} | Best score initialized at {value:.6f}. Patience {self.epochs_without_improvement}."
