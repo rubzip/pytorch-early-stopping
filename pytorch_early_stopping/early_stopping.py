@@ -49,27 +49,53 @@ class EarlyStopping:
         self.best_model = None
 
     def __call__(self, value: float, model: nn.Module):
-        """Call this method to check if early stopping should be triggered."""
+        """Alias for the step method to allow the object to be called directly.
+
+        Args:
+            value (float): The current validation metric (e.g., loss or accuracy).
+            model (nn.Module): The PyTorch model being trained.
+        """
         return self.step(value=value, model=model)
 
     def _log(self, msg: str) -> None:
-        """If verbose is True, log the given message using the provided logging function."""
+        """Logs a message using the provided logging function, if verbose is enabled.
+
+        Args:
+            msg (str): Message to be logged.
+        """
         if self.verbose:
             self.log_func(msg)
 
     def _save_best_model(self, model: nn.Module) -> None:
-        """If restore_best_weights, saves the model state dict of the given model."""
+        """Saves the current model's state_dict as the best model if restore_best_weights is True.
+
+        Args:
+            model (nn.Module): The PyTorch model being trained.
+        """
         if self.restore_best_weights:
             self.best_model = copy.deepcopy(model.state_dict())
             self._log(f"Epoch {self.epoch} | Saving the current model.")
 
     def restore_best_model(self, model: nn.Module) -> None:
-        """If restore_best_weights, restores the model state dict of the best model."""
+        """Restores the model weights to the best recorded state.
+        This is only done if `restore_best_weights` is True and a best model has been saved.
+
+        Args:
+            model (nn.Module): The PyTorch model to restore.
+        """
         if self.restore_best_weights and self.best_model is not None:
             model.load_state_dict(self.best_model)
             self._log(f"Epoch {self.epoch} | Restoring best model.")
 
     def step(self, value: float, model: nn.Module) -> None:
+        """Performs one step of early stopping evaluation.
+        Monitors the validation metric to determine if training should be stopped based on
+        lack of improvement. Optionally saves and restores the best model state.
+
+        Args:
+            value (float): Current value of the monitored validation metric.
+            model (nn.Module): The PyTorch model being trained.
+        """
         self.epoch += 1
         if self.early_stop:
             return
