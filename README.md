@@ -43,7 +43,7 @@ EarlyStopping(
 Integrating an EarlyStopping object in your training loop is as easy as:
 ```python3
 from pytorch_early_stopping import EarlyStopping
-
+# Initialize early stopping object
 early_stopping = EarlyStopping(
     patience=5,
     min_delta=1e-4,
@@ -54,8 +54,9 @@ early_stopping = EarlyStopping(
 for epoch in range(num_epochs):
     # Train model and evaluate it
     ...
+    val_loss = compute_validation_loss(...)
 
-    val_loss = compute_validation_loss()
+    # Early stopping
     early_stopping(val_loss, model)
     if early_stopping.early_stop:
         break
