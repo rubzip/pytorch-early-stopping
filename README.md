@@ -42,7 +42,7 @@ EarlyStopping(
 ## Example of usage
 Integrating an EarlyStopping object in your training loop is as easy as:
 ```python3
-from pytorch_early_stopping import EarlyStopping
+from pytorch_early_stopping.early_stopping import EarlyStopping
 # Initialize early stopping object
 early_stopping = EarlyStopping(
     patience=5,
