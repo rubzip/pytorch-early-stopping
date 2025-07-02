@@ -76,6 +76,11 @@ class EarlyStopping:
             self.best_model = copy.deepcopy(model.state_dict())
             self._log(f"Epoch {self.epoch} | Saving the current model.")
 
+    def _improvement_achieved(self, value, model) -> None:
+        self.best_value = value
+        self.epochs_without_improvement = 0
+        self._save_best_model(model)
+
     def restore_best_model(self, model: nn.Module) -> None:
         """Restores the model weights to the best recorded state.
         This is only done if `restore_best_weights` is True and a best model has been saved.
@@ -107,9 +112,7 @@ class EarlyStopping:
             return
 
         if self.best_value is None:
-            self.best_value = value
-            self.epochs_without_improvement = 0
-            self._save_best_model(model)
+            self._improvement_achieved(value, model)
             self._log(
                 f"Epoch {self.epoch} | Best score initialized at {value:.6f}. Patience {self.epochs_without_improvement}."
             )
@@ -123,9 +126,7 @@ class EarlyStopping:
         )
 
         if model_improved:
-            self.best_value = value
-            self.epochs_without_improvement = 0
-            self._save_best_model(model)
+            self._improvement_achieved(value, model)
             self._log(
                 f"Epoch {self.epoch} | Improved best score to {value:.6f}. Reset patience."
             )
